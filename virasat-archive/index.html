@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>virasat.archive — A Visual Archive of India's Cultural Heritage</title>
+  <meta name="description" content="Visual image-discovery and archival companion to Virasat.ai — Artifacts of India. Explore Indian cultural heritage through a Pinterest-inspired masonry gallery." />
+  
+  <!-- Favicon / Brand Symbol -->
+  <link rel="icon" href="./static/images/logo.png" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./static/css/archive.css" />
+</head>
+<body>
+
+  <!-- ========================================================================
+       TOP NAVIGATION BAR
+       ======================================================================== -->
+  <nav class="archive-nav" aria-label="Main Navigation">
+    <div class="nav-container">
+      
+      <!-- Brand Seal & Identity -->
+      <a href="./" class="brand-wrapper" title="Virasat.ai — Visual Heritage Archive">
+        <img src="./static/images/logo.png" alt="Virasat.ai — Artifacts of India" class="brand-logo-img" />
+        <span class="brand-archive-badge">Archive</span>
+      </a>
+
+      <!-- Live Search Bar -->
+      <div class="nav-search-bar">
+        <div class="search-input-wrapper">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"/>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input 
+            type="search" 
+            id="archiveSearchInput" 
+            class="archive-search-input" 
+            placeholder="Search artifacts, dynasties, mediums, or Virasat Archive IDs (e.g. VA-SCL-0101)..." 
+            aria-label="Search cultural archive"
+            autocomplete="off"
+          />
+          <button type="button" id="searchClearBtn" class="search-clear-btn" title="Clear search">&times;</button>
+        </div>
+      </div>
+
+      <!-- Navigation Actions -->
+      <div class="nav-actions">
+        <!-- Liked Photos Toggle -->
+        <button type="button" id="myLikedBtn" class="nav-btn nav-btn-outline" title="View your liked photos">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+          </svg>
+          <span>Liked Photos</span>
+          <span id="likedBadgeCount" class="nav-badge-count">0</span>
+        </button>
+
+        <!-- Catalog New Artifact Button -->
+        <button type="button" id="navAddArtifactBtn" class="nav-btn nav-btn-primary" title="Catalog a new cultural record">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          <span>+ Add Record</span>
+        </button>
+
+        <!-- Link Back to Parent Virasat.ai -->
+        <a href="http://127.0.0.1:5000" target="_blank" rel="noopener noreferrer" class="nav-btn nav-btn-outline" title="Explore Virasat.ai Geospatial Map & Taxonomy">
+          <span>Open Virasat.ai</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+            <polyline points="15 3 21 3 21 9"/>
+            <line x1="10" y1="14" x2="21" y2="3"/>
+          </svg>
+        </a>
+      </div>
+
+    </div>
+  </nav>
+
+  <!-- ========================================================================
+       HERO / ARCHIVAL LEDGER BANNER
+       ======================================================================== -->
+  <header class="hero-archive-banner">
+    <div class="hero-content">
+      <div class="hero-companion-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="10"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+        <span>Virasat.ai — Visual Companion Archive</span>
+      </div>
+
+      <div class="hero-brand-logo-wrap">
+        <img src="./static/images/logo.png" alt="Virasat.ai Logo" class="hero-brand-logo" />
+        <span class="hero-archive-badge">.archive</span>
+      </div>
+      <h1 class="hero-title" style="display:none;">virasat.archive</h1>
+      <p class="hero-tagline">“A visual archive of India's cultural heritage.”</p>
+      
+      <p class="hero-description">
+        The dedicated visual-discovery ledger to <strong>Virasat.ai — Artifacts of India</strong>. 
+        Browse Indian cultural heritage through a Pinterest-inspired masonry gallery. 
+        Every entry distinguishes internal curatorial records from institutional companion databases and 
+        verifiable external image repositories.
+      </p>
+    </div>
+  </header>
+
+  <!-- ========================================================================
+       GALLERY CONTAINER & STATUS BAR
+       ======================================================================== -->
+  <main class="gallery-section">
+    <div class="results-status-bar">
+      <div id="resultsCounter" class="status-counter">Loading archival records...</div>
+      <div id="activeFiltersStrip" class="active-filters-chips" style="display: none;"></div>
+    </div>
+
+    <!-- Masonry Columns Grid (Sand Beige #D9C2A3 placeholders by default) -->
+    <div id="archiveMasonry" class="archive-masonry-grid" aria-live="polite">
+      <!-- Cards dynamically rendered by archive-app.js -->
+    </div>
+  </main>
+
+  <!-- ========================================================================
+       MUSEUM-GRADE ARCHIVAL INSPECTOR (<dialog closedby="any">)
+       ======================================================================== -->
+  <dialog id="artifactModal" class="archive-modal" closedby="any" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close-btn" aria-label="Close Inspector">&times;</button>
+    
+    <div class="modal-inner-grid">
+      
+      <!-- Visual Column (Sand Beige Placeholder or Attached Image) -->
+      <div id="modalVisualColumn" class="modal-visual-column">
+        <!-- Injected dynamically -->
+      </div>
+
+      <!-- Archival Ledger Column -->
+      <div class="modal-ledger-column">
+        
+        <div class="modal-catalog-header">
+          <span id="modalCatalogCode" class="modal-catalog-code">Virasat Archive ID: VA-0000</span>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span id="modalRecordSource" class="record-provenance-tag">Virasat Archive Record</span>
+            <span id="modalCategoryBadge" class="modal-category-badge">Category</span>
+          </div>
+        </div>
+
+        <div>
+          <h2 id="modalTitle" class="modal-title">Artifact Title</h2>
+          <p id="modalSubtitle" class="modal-subtitle">Dynasty / Era &bull; Provenance</p>
+        </div>
+
+        <!-- Verified Source & Attribution Box -->
+        <div id="modalSourceCallout" class="modal-source-callout">
+          <!-- Injected dynamically based on attachment state -->
+        </div>
+
+        <!-- Metadata Ledger Table -->
+        <div class="modal-meta-grid">
+          <div class="meta-field">
+            <span class="meta-label">Dynasty / Era</span>
+            <span id="modalMetaDynasty" class="meta-val">Era</span>
+          </div>
+          <div class="meta-field">
+            <span class="meta-label">Medium & Method</span>
+            <span id="modalMetaMedium" class="meta-val">Material</span>
+          </div>
+          <div class="meta-field">
+            <span class="meta-label">Provenance</span>
+            <span id="modalMetaProvenance" class="meta-val">State / Region</span>
+          </div>
+          <div class="meta-field">
+            <span class="meta-label">Physical Dimensions</span>
+            <span id="modalMetaDimensions" class="meta-val">Dimensions</span>
+          </div>
+        </div>
+
+        <!-- Historical Appraisal -->
+        <div class="modal-narrative-section">
+          <h4 class="narrative-heading">Curator's Appraisal & History</h4>
+          <p id="modalNarrative" class="narrative-body">Curator description...</p>
+        </div>
+
+        <!-- Pigments & Materials Palette -->
+        <div>
+          <span class="meta-label">Material & Pigment Palette</span>
+          <div id="modalPigmentSwatches" class="pigment-swatches-strip">
+            <!-- Swatches injected dynamically -->
+          </div>
+        </div>
+
+        <!-- Modal Bottom Actions -->
+        <div class="modal-bottom-actions">
+          <button type="button" id="modalSaveBoardBtn" class="nav-btn nav-btn-primary">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <span>Like Photo</span>
+          </button>
+
+          <button type="button" id="modalCiteBtn" class="nav-btn nav-btn-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+            </svg>
+            <span>Cite Artifact</span>
+          </button>
+
+          <button type="button" id="modalShareBtn" class="nav-btn nav-btn-outline">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="18" cy="5" r="3"/>
+              <circle cx="6" cy="12" r="3"/>
+              <circle cx="18" cy="19" r="3"/>
+              <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+              <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+            </svg>
+            <span>Copy Link</span>
+          </button>
+        </div>
+
+      </div>
+
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       ATTACH / LOAD PHOTO MODAL (<dialog closedby="any">)
+       ======================================================================== -->
+  <dialog id="photoModal" class="archive-modal" closedby="any" aria-labelledby="photoTargetTitle">
+    <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
+    
+    <div style="padding: 2.25rem;">
+      <div class="photo-dialog-header">
+        <div>
+          <h3 id="photoTargetTitle" class="photo-dialog-title">Attach Photograph to Archival Slot</h3>
+          <p id="photoTargetCode" class="photo-dialog-desc">Virasat Archive ID: VA-0000</p>
+        </div>
+      </div>
+
+      <p id="photoWikimediaHint" style="font-size:0.84rem;color:var(--c-warm-brown);margin-bottom:1rem;"></p>
+
+      <!-- URL Input with Real-time Wikimedia Commons API Detection -->
+      <div class="photo-input-group">
+        <label for="photoUrlInput" class="photo-input-label">Photograph Web URL (Wikimedia Commons, Direct Image, or File Name)</label>
+        <input type="url" id="photoUrlInput" class="photo-text-input" placeholder="e.g. https://commons.wikimedia.org/wiki/File:Nataraja... or https://..." />
+      </div>
+
+      <!-- Live Wikimedia API Resolution Feedback Box -->
+      <div id="wikimediaResolveBox" class="wikimedia-resolve-box" style="display: none;">
+        <span id="wikimediaStatusText">Resolving metadata from Wikimedia Commons API...</span>
+      </div>
+
+      <!-- Specific License & Attribution Input -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.25rem;">
+        <div class="photo-input-group">
+          <label for="photoLicenseInput" class="photo-input-label">Image License (e.g. Public domain, CC BY-SA 3.0, CC0)</label>
+          <input type="text" id="photoLicenseInput" class="photo-text-input" placeholder="Auto-detected or specific license" />
+        </div>
+        <div class="photo-input-group">
+          <label for="photoAttributionInput" class="photo-input-label">Author / Photographer / Credit</label>
+          <input type="text" id="photoAttributionInput" class="photo-text-input" placeholder="e.g. Photographer Name or Institution" />
+        </div>
+      </div>
+
+      <!-- Local File Upload Dropzone -->
+      <div class="photo-input-group">
+        <span class="photo-input-label">Or Select Local Image File (Stored Locally in Browser)</span>
+        <div id="photoDropzone" class="dropzone-box">
+          <svg class="dropzone-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+            <polyline points="17 8 12 3 7 8"/>
+            <line x1="12" y1="3" x2="12" y2="15"/>
+          </svg>
+          <p style="font-size:0.86rem;color:var(--c-deep-brown);font-weight:600;">Click to select an image from your device</p>
+          <p style="font-size:0.75rem;color:var(--c-warm-brown);margin-top:4px;">Persisted strictly in browser localStorage.</p>
+        </div>
+        <input type="file" id="photoFileInput" accept="image/*" style="display: none;" />
+      </div>
+
+      <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+        <button type="button" class="nav-btn nav-btn-outline" onclick="document.getElementById('photoModal').close()">Cancel</button>
+        <button type="button" id="photoSubmitBtn" class="nav-btn nav-btn-primary">Save to Slot</button>
+      </div>
+
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       CITATION GENERATOR MODAL (<dialog closedby="any">)
+       ======================================================================== -->
+  <dialog id="citationModal" class="archive-modal" closedby="any">
+    <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
+    <div style="padding: 2.25rem;">
+      <h3 style="font-family:var(--font-serif);color:var(--c-deep-brown);margin-bottom:0.35rem;font-size:1.5rem;">Archival Citation Spec</h3>
+      <p style="font-size:0.88rem;color:var(--c-warm-brown);margin-bottom:1.5rem;">Academic citation standards distinguishing internal archival records from visual sources.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 1.25rem;">
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span class="meta-label">Chicago 17th Edition</span>
+            <button type="button" class="nav-btn nav-btn-outline btn-copy-cite" data-target="citeChicago" style="padding:0.25rem 0.65rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <div id="citeChicago" style="background:var(--c-soft-ivory);border:1px solid var(--c-light-beige);padding:0.85rem;border-radius:var(--radius-sm);font-size:0.82rem;color:var(--c-deep-brown);font-family:serif;"></div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span class="meta-label">APA 7th Edition</span>
+            <button type="button" class="nav-btn nav-btn-outline btn-copy-cite" data-target="citeApa" style="padding:0.25rem 0.65rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <div id="citeApa" style="background:var(--c-soft-ivory);border:1px solid var(--c-light-beige);padding:0.85rem;border-radius:var(--radius-sm);font-size:0.82rem;color:var(--c-deep-brown);font-family:serif;"></div>
+        </div>
+
+        <div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+            <span class="meta-label">BibTeX Reference</span>
+            <button type="button" class="nav-btn nav-btn-outline btn-copy-cite" data-target="citeBibtex" style="padding:0.25rem 0.65rem;font-size:0.75rem;">Copy</button>
+          </div>
+          <pre id="citeBibtex" style="background:var(--c-soft-ivory);border:1px solid var(--c-light-beige);padding:0.85rem;border-radius:var(--radius-sm);font-size:0.78rem;color:var(--c-deep-brown);overflow-x:auto;white-space:pre-wrap;"></pre>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       CATALOG NEW ARTIFACT MODAL (<dialog closedby="any">)
+       ======================================================================== -->
+  <dialog id="addArtifactModal" class="archive-modal" closedby="any" aria-labelledby="addRecordHeading">
+    <button type="button" class="modal-close-btn" aria-label="Close">&times;</button>
+    <div style="padding: 2.25rem;">
+      <div class="photo-dialog-header">
+        <div>
+          <h3 id="addRecordHeading" class="photo-dialog-title">Catalog New Archival Artifact</h3>
+          <p class="photo-dialog-desc">Document an Indian heritage artifact under an internal Virasat Archive ID.</p>
+        </div>
+      </div>
+
+      <form id="addArtifactForm">
+        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="photo-input-group">
+            <label for="newRecordTitle" class="photo-input-label">Artifact Title *</label>
+            <input type="text" id="newRecordTitle" class="photo-text-input" placeholder="e.g. Chola Nataraja Bronze" required />
+          </div>
+          <div class="photo-input-group">
+            <label for="newRecordCategory" class="photo-input-label">Category *</label>
+            <select id="newRecordCategory" class="photo-text-input" style="height: 42px;">
+              <option value="Sculpture & Bronzes">Sculpture & Bronzes</option>
+              <option value="Architecture & Reliefs">Architecture & Reliefs</option>
+              <option value="Paintings & Murals">Paintings & Murals</option>
+              <option value="Textiles & Weaves">Textiles & Weaves</option>
+              <option value="Living Craft & Regalia">Living Craft & Regalia</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+          <div class="photo-input-group">
+            <label for="newRecordDynasty" class="photo-input-label">Dynasty / Era</label>
+            <input type="text" id="newRecordDynasty" class="photo-text-input" placeholder="e.g. Chola Dynasty (10th c.)" />
+          </div>
+          <div class="photo-input-group">
+            <label for="newRecordRegion" class="photo-input-label">Provenance / State</label>
+            <input type="text" id="newRecordRegion" class="photo-text-input" placeholder="e.g. Tamil Nadu" />
+          </div>
+          <div class="photo-input-group">
+            <label for="newRecordRatio" class="photo-input-label">Aspect Ratio</label>
+            <select id="newRecordRatio" class="photo-text-input" style="height: 42px;">
+              <option value="3:4">3:4 (Portrait)</option>
+              <option value="2:3">2:3 (Tall)</option>
+              <option value="1:1">1:1 (Square)</option>
+              <option value="4:3">4:3 (Classic)</option>
+              <option value="16:9">16:9 (Wide)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="photo-input-group" style="margin-bottom: 1rem;">
+          <label for="newRecordMedium" class="photo-input-label">Medium & Materials</label>
+          <input type="text" id="newRecordMedium" class="photo-text-input" placeholder="e.g. Lost-wax cast panchaloha bronze" />
+        </div>
+
+        <div class="photo-input-group" style="margin-bottom: 1rem;">
+          <label for="newRecordNotes" class="photo-input-label">Curator's Appraisal / Historical Notes</label>
+          <textarea id="newRecordNotes" class="photo-text-input" rows="3" placeholder="Describe cultural significance, symbolism, or historical background..."></textarea>
+        </div>
+
+        <div class="photo-input-group" style="margin-bottom: 1.25rem;">
+          <label for="newRecordImageUrl" class="photo-input-label">Image URL (Optional — leave empty for Sand Beige Archival Blueprint)</label>
+          <input type="url" id="newRecordImageUrl" class="photo-text-input" placeholder="e.g. https://commons.wikimedia.org/... or direct image URL" />
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: flex-end; margin-top: 1.5rem;">
+          <button type="button" class="nav-btn nav-btn-outline" onclick="document.getElementById('addArtifactModal').close()">Cancel</button>
+          <button type="submit" class="nav-btn nav-btn-primary">Catalog Artifact</button>
+        </div>
+      </form>
+    </div>
+  </dialog>
+
+  <!-- ========================================================================
+       FOOTER (Ecosystem Anchor)
+       ======================================================================== -->
+  <footer class="archive-footer">
+    <div class="footer-container">
+      
+      <!-- Brand & Ecosystem Statement -->
+      <div class="footer-brand-col">
+        <div style="display:flex;align-items:center;gap:0.6rem;">
+          <img src="./static/images/logo.png" alt="Virasat.ai" style="height:36px;width:auto;" />
+          <span class="brand-archive-badge">Archive</span>
+        </div>
+        <p class="footer-desc">
+          A visual image-discovery and archival companion to <strong>Virasat.ai — Artifacts of India</strong>. 
+          Preserving tangible and intangible heritage through open documentation, verified attribution standards, and interactive archival exploration.
+        </p>
+      </div>
+
+      <div>
+        <a href="http://127.0.0.1:5000" target="_blank" rel="noopener noreferrer" class="footer-ecosystem-link">
+          <span>Part of the Virasat.ai Ecosystem ↗</span>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- SIH 2026 Credits -->
+    <div class="footer-credits-section">
+      <div class="credits-sih-title">
+        Made with <span class="credits-heart" aria-label="love">❤️</span> for <strong>SIH 2026</strong>
+      </div>
+      <div class="credits-team-wrapper">
+        <span class="credits-team-label">Made by</span>
+        <ol class="credits-team-list">
+          <li><span class="team-num">1.</span> Utkarsh Priyanshu</li>
+          <li><span class="team-num">2.</span> Aditya Ray</li>
+          <li><span class="team-num">3.</span> Yatika Negi</li>
+          <li><span class="team-num">4.</span> Shiva Singh</li>
+          <li><span class="team-num">5.</span> Mohd Saim</li>
+          <li><span class="team-num">6.</span> Rachit Pratap Singh</li>
+        </ol>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Toast Notification -->
+  <div id="archiveToast" class="archive-toast" role="alert" aria-live="polite">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+      <polyline points="22 4 12 14.01 9 11.01"/>
+    </svg>
+    <span class="toast-msg">Notification</span>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./static/js/archive-data.js"></script>
+  <script src="./static/js/archive-app.js"></script>
+</body>
+</html>
