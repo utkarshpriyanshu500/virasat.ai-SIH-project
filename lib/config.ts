@@ -6,7 +6,7 @@
 export const ARCHIVE_URL: string =
   (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_ARCHIVE_URL
     ? process.env.NEXT_PUBLIC_ARCHIVE_URL.replace(/\/$/, "")
-    : "http://127.0.0.1:5050");
+    : "https://virasat-archive.onrender.com");
 
 /**
  * Builds the URL to virasat.archive that automatically populates and runs

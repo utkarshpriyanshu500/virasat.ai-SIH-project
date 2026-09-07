@@ -56,7 +56,7 @@ export default function Hero() {
         </Link>
 
         <a
-          href="https://virasat-archive.onrender.com/"
+          href={ARCHIVE_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="rounded-full border border-[#7b3f00] px-7 py-3 font-semibold text-[#7b3f00] transition hover:bg-[#7b3f00] hover:text-white"
