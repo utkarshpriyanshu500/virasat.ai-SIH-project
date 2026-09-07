@@ -63,7 +63,10 @@ export default function HeritageMap({
           .order("id", { ascending: true });
 
       if (officialError) {
-        console.error("Official map data error:", officialError);
+        console.error(
+          "Official map data error:",
+          officialError
+        );
       }
 
       // Fetch approved community/artisan submissions
@@ -77,7 +80,10 @@ export default function HeritageMap({
           .order("id", { ascending: true });
 
       if (submissionError) {
-        console.error("Community map data error:", submissionError);
+        console.error(
+          "Community map data error:",
+          submissionError
+        );
       }
 
       // Convert official heritage data
@@ -198,38 +204,39 @@ export default function HeritageMap({
                     position={position}
                     icon={markerIcon}
                   >
-                  <Popup>
-                    <div className="min-w-[190px]">
-                      {item.source !== "official" && (
-                        <p className="mb-1 text-xs font-bold uppercase tracking-wide text-[#a05a2c]">
-                          {item.source === "artisan"
-                            ? "Artisan Heritage"
-                            : "Community Heritage"}
+                    <Popup>
+                      <div className="min-w-[190px]">
+                        {item.source !== "official" && (
+                          <p className="mb-1 text-xs font-bold uppercase tracking-wide text-[#a05a2c]">
+                            {item.source === "artisan"
+                              ? "Artisan Heritage"
+                              : "Community Heritage"}
+                          </p>
+                        )}
+
+                        <h3 className="text-lg font-bold text-[#3b2416]">
+                          {item.name}
+                        </h3>
+
+                        <p className="mt-1 text-sm font-semibold text-[#a05a2c]">
+                          {item.category}
                         </p>
-                      )}
 
-                      <h3 className="text-lg font-bold text-[#3b2416]">
-                        {item.name}
-                      </h3>
+                        <p className="mt-2 text-sm text-[#654b3b]">
+                          📍 {item.location}
+                        </p>
 
-                      <p className="mt-1 text-sm font-semibold text-[#a05a2c]">
-                        {item.category}
-                      </p>
-
-                      <p className="mt-2 text-sm text-[#654b3b]">
-                        📍 {item.location}
-                      </p>
-
-                      <Link
-                        href={`/explore/${item.slug}`}
-                        className="mt-3 inline-block font-semibold text-[#7b3f00] hover:underline"
-                      >
-                        Explore →
-                      </Link>
-                    </div>
-                  </Popup>
-                </Marker>
-              ))}
+                        <Link
+                          href={`/explore/${item.slug}`}
+                          className="mt-3 inline-block font-semibold text-[#7b3f00] hover:underline"
+                        >
+                          Explore →
+                        </Link>
+                      </div>
+                    </Popup>
+                  </Marker>
+                );
+              })}
           </MapContainer>
         </div>
       )}
