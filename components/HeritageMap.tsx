@@ -186,15 +186,18 @@ export default function HeritageMap({
                   item.latitude !== null &&
                   item.longitude !== null
               )
-              .map((item) => (
-                <Marker
-                  key={`${item.source}-${item.id}`}
-                  position={[
-                    item.latitude as number,
-                    item.longitude as number,
-                  ]}
-                  icon={markerIcon}
-                >
+              .map((item) => {
+                const position: [number, number] = [
+                  item.latitude as number,
+                  item.longitude as number,
+                ];
+
+                return (
+                  <Marker
+                    key={`${item.source}-${item.id}`}
+                    position={position}
+                    icon={markerIcon}
+                  >
                   <Popup>
                     <div className="min-w-[190px]">
                       {item.source !== "official" && (
